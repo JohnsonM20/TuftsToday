@@ -3,29 +3,37 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		343B0D0423F443A8009BA08A /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 343B0D0323F443A8009BA08A /* SwiftSoup */; };
+		343B0D0623F7599E009BA08A /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B0D0523F7599E009BA08A /* PopoverViewController.swift */; };
+		343B0D0823F775A3009BA08A /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B0D0723F775A3009BA08A /* CalendarViewController.swift */; };
+		34732E5523F88ED000883F9B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34732E5423F88ED000883F9B /* Main.storyboard */; };
 		34BDFC7423F39304003F3D23 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BDFC7323F39304003F3D23 /* AppDelegate.swift */; };
 		34BDFC7623F39304003F3D23 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BDFC7523F39304003F3D23 /* SceneDelegate.swift */; };
 		34BDFC7823F39304003F3D23 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BDFC7723F39304003F3D23 /* FirstViewController.swift */; };
 		34BDFC7A23F39304003F3D23 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BDFC7923F39304003F3D23 /* SecondViewController.swift */; };
-		34BDFC7D23F39304003F3D23 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34BDFC7B23F39304003F3D23 /* Main.storyboard */; };
 		34BDFC7F23F39305003F3D23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34BDFC7E23F39305003F3D23 /* Assets.xcassets */; };
 		34BDFC8223F39305003F3D23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34BDFC8023F39305003F3D23 /* LaunchScreen.storyboard */; };
+		34BDFC8A23F394D5003F3D23 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BDFC8923F394D5003F3D23 /* EventViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		343B0D0523F7599E009BA08A /* PopoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
+		343B0D0723F775A3009BA08A /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
+		343D85C623F4402800639569 /* SwiftSoup-master */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "SwiftSoup-master"; path = "../../../../SwiftSoup-master"; sourceTree = "<group>"; };
+		34732E5423F88ED000883F9B /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		34BDFC7023F39304003F3D23 /* TuftsTodayApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TuftsTodayApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BDFC7323F39304003F3D23 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		34BDFC7523F39304003F3D23 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		34BDFC7723F39304003F3D23 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
 		34BDFC7923F39304003F3D23 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
-		34BDFC7C23F39304003F3D23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		34BDFC7E23F39305003F3D23 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		34BDFC8123F39305003F3D23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		34BDFC8323F39305003F3D23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		34BDFC8923F394D5003F3D23 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				343B0D0423F443A8009BA08A /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,11 +67,15 @@
 		34BDFC7223F39304003F3D23 /* TuftsTodayApp */ = {
 			isa = PBXGroup;
 			children = (
+				343D85C623F4402800639569 /* SwiftSoup-master */,
 				34BDFC7323F39304003F3D23 /* AppDelegate.swift */,
 				34BDFC7523F39304003F3D23 /* SceneDelegate.swift */,
 				34BDFC7723F39304003F3D23 /* FirstViewController.swift */,
 				34BDFC7923F39304003F3D23 /* SecondViewController.swift */,
-				34BDFC7B23F39304003F3D23 /* Main.storyboard */,
+				34732E5423F88ED000883F9B /* Main.storyboard */,
+				34BDFC8923F394D5003F3D23 /* EventViewController.swift */,
+				343B0D0523F7599E009BA08A /* PopoverViewController.swift */,
+				343B0D0723F775A3009BA08A /* CalendarViewController.swift */,
 				34BDFC7E23F39305003F3D23 /* Assets.xcassets */,
 				34BDFC8023F39305003F3D23 /* LaunchScreen.storyboard */,
 				34BDFC8323F39305003F3D23 /* Info.plist */,
@@ -86,6 +99,9 @@
 			dependencies = (
 			);
 			name = TuftsTodayApp;
+			packageProductDependencies = (
+				343B0D0323F443A8009BA08A /* SwiftSoup */,
+			);
 			productName = TuftsTodayApp;
 			productReference = 34BDFC7023F39304003F3D23 /* TuftsTodayApp.app */;
 			productType = "com.apple.product-type.application";
@@ -114,6 +130,9 @@
 				Base,
 			);
 			mainGroup = 34BDFC6723F39304003F3D23;
+			packageReferences = (
+				343B0D0223F443A8009BA08A /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+			);
 			productRefGroup = 34BDFC7123F39304003F3D23 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -128,9 +147,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34732E5523F88ED000883F9B /* Main.storyboard in Resources */,
 				34BDFC8223F39305003F3D23 /* LaunchScreen.storyboard in Resources */,
 				34BDFC7F23F39305003F3D23 /* Assets.xcassets in Resources */,
-				34BDFC7D23F39304003F3D23 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +163,9 @@
 				34BDFC7A23F39304003F3D23 /* SecondViewController.swift in Sources */,
 				34BDFC7823F39304003F3D23 /* FirstViewController.swift in Sources */,
 				34BDFC7423F39304003F3D23 /* AppDelegate.swift in Sources */,
+				34BDFC8A23F394D5003F3D23 /* EventViewController.swift in Sources */,
+				343B0D0623F7599E009BA08A /* PopoverViewController.swift in Sources */,
+				343B0D0823F775A3009BA08A /* CalendarViewController.swift in Sources */,
 				34BDFC7623F39304003F3D23 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -151,14 +173,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		34BDFC7B23F39304003F3D23 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				34BDFC7C23F39304003F3D23 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		34BDFC8023F39305003F3D23 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -342,6 +356,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		343B0D0223F443A8009BA08A /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		343B0D0323F443A8009BA08A /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 343B0D0223F443A8009BA08A /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 34BDFC6823F39304003F3D23 /* Project object */;
 }
