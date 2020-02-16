@@ -11,10 +11,18 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    public var itemList: [EventItemResponse] = []
+    //var checkedItems: [String] = []
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let eventVC = EventViewController()
+        self.itemList = eventVC.getEventsFromSite()
+        
+        //let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        //let events = storyBoard.instantiateViewController(withIdentifier: "Events") as! EventViewController
+        //events.viewDidLoad()
+        
         return true
     }
 
@@ -34,4 +42,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-
