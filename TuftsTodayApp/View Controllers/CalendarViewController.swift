@@ -8,13 +8,32 @@
 
 import UIKit
 
-class CalendarViewController: UITableViewController {
+class CalendarItem {
+    
+    var title: String = ""
+}
 
-    @IBOutlet var optionsButton: UIBarButtonItem!
+class CalendarViewController: UITableViewController, addCalendarItemViewControllerDelegate {
+    func addCalendarItemViewControllerDidCancel(_ controller: AddCalendarItemViewController) {
+        navigationController?.popViewController(animated:true)
+    }
+    
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishAdding item: CalendarItem) {
+        let newRowIndex = calendarList.count
+        calendarList.append(item)
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRows(at: indexPaths, with: .automatic)
+        navigationController?.popViewController(animated:true)
+    }
+    
+    
+    var calendarList: [CalendarItem] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationController?.navigationBar.prefersLargeTitles = true
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -24,30 +43,46 @@ class CalendarViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    @IBAction func displayPopover(_ sender: Any) {
-        print("Test")
-        performSegue(withIdentifier: "pop", sender: self)
-    }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return calendarList.count
     }
-
-    /*
+    @IBAction func addToCalendar(_ sender: Any) {
+        let newRowIndex = calendarList.count
+        let item = CalendarItem()
+        item.title = "I am a new row"
+        calendarList.append(item)
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRows(at: indexPaths, with: .automatic)
+    }
+    
+    @IBAction func editClasses(_ sender: Any) {
+        
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
 
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CalendarItem", for: indexPath)
+        cell.selectionStyle = .none;
+        
+        let title = cell.viewWithTag(99) as! UILabel
+        title.text = calendarList[indexPath.row].title
         return cell
+
     }
-    */
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        calendarList.remove(at: indexPath.row)
+        let indexPaths = [indexPath]
+        tableView.deleteRows(at: indexPaths, with: .automatic)
+        
+    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -84,15 +119,12 @@ class CalendarViewController: UITableViewController {
     }
     */
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    // MARK:- Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "AddItem" {
+            let controller = segue.destination as! AddCalendarItemViewController
+            controller.delegate = self
+        }
     }
-    */
 
 }
-//223

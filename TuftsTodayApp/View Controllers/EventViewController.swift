@@ -24,6 +24,7 @@ class EventViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.prefersLargeTitles = true
         
         eventList = appDelegate.itemList
         //print(eventList)
@@ -125,8 +126,9 @@ class EventViewController: UITableViewController {
             //print("item cell")
             let name = cell.viewWithTag(1) as! UILabel
             let info = cell.viewWithTag(2) as! UILabel
+            let check = cell.viewWithTag(1001) as! UILabel
             
-            let rowNumber = indexPath.row//-uniqueDaysSoFar
+            //let rowNumber = indexPath.row//-uniqueDaysSoFar
             //eventList[rowNumber].addedRows = uniqueDaysSoFar
             //print(eventList[rowNumber].addedRows)
             
@@ -143,20 +145,16 @@ class EventViewController: UITableViewController {
             }
             
             if checkedItems.contains(event.eventID){
-                cell.accessoryType = .checkmark
+                //cell.accessoryType = .checkmark
+                check.text = "√"
             } else {
-                cell.accessoryType = .none
+                //cell.accessoryType = .none
+                check.text = ""
             }
-            /*
-            if startingTime != dateFormatter(dateString: eventList[rowNumber+1].startDateTime, convertTo: "\(timeTypes.toTimeOfDay)"){
-                nextRowIsDate = true
-                uniqueDaysSoFar += 1
-            }
-            */
         } else {
         //print("new day cell")
             let cell = tableView.dequeueReusableCell(withIdentifier: "NewDay", for: indexPath)
-            cell.selectionStyle = .none;
+            //cell.selectionStyle = .none;
             
             let date = cell.viewWithTag(10) as! UILabel
             date.text = eventAndDateList[indexPath.row].title
@@ -177,20 +175,41 @@ class EventViewController: UITableViewController {
         if let cell = tableView.cellForRow(at: indexPath){
             
             if let event = eventAndDateList[indexPath.row] as? Event  {
+                /*
+                let check = cell.viewWithTag(1001) as! UILabel
+                
                 if checkedItems.contains(event.eventID) && cell.selectionStyle != .none{
                     //print("unchecked!")
-                    cell.accessoryType = .none
+                    //cell.accessoryType = .none
+                    check.text = ""
                     checkedItems.remove(event.eventID)
                 } else if cell.selectionStyle != .none{
-                    cell.accessoryType = .checkmark
+                    //cell.accessoryType = .checkmark
                     //print("checked!")
                     checkedItems.insert(event.eventID)
+                    check.text = "√"
                 }
+                */
+                
+                configureCheckmark(for: cell, with: event)
             }
 
         }
         //defaults.set(checkedItems, forKey: defaultKeys.checkedItems)
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func configureCheckmark(for cell: UITableViewCell, with item: Event) {
+        let label = cell.viewWithTag(1001) as! UILabel
+        if checkedItems.contains(item.eventID){
+            //cell.accessoryType = .checkmark
+            label.text = ""
+            checkedItems.remove(item.eventID)
+        } else {
+            //cell.accessoryType = .none
+            label.text = "√"
+            checkedItems.insert(item.eventID)
+        }
     }
     
     @IBAction func scrollToTop(_ sender: Any) {
