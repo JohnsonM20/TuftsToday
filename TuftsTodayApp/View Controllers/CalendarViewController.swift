@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CalendarItem {
+class CalendarItem: NSObject {
     
     var title: String = ""
 }
@@ -26,6 +26,15 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         tableView.insertRows(at: indexPaths, with: .automatic)
         navigationController?.popViewController(animated:true)
     }
+    
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing item: CalendarItem) {
+        if let index = calendarList.firstIndex(of: item) {
+            let indexPath = IndexPath(row: index, section: 0)
+            if let cell = tableView.cellForRow(at: indexPath) {
+                configureText(for: cell, with: item)
+        }
+    }
+    navigationController?.popViewController(animated:true) }
     
     
     var calendarList: [CalendarItem] = []
@@ -71,8 +80,11 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         let cell = tableView.dequeueReusableCell(withIdentifier: "CalendarItem", for: indexPath)
         cell.selectionStyle = .none;
         
-        let title = cell.viewWithTag(99) as! UILabel
-        title.text = calendarList[indexPath.row].title
+        //let title = cell.viewWithTag(99) as! UILabel
+        //title.text = calendarList[indexPath.row].title
+        let item = calendarList[indexPath.row]
+        configureText(for: cell, with: item)
+        
         return cell
 
     }
@@ -81,6 +93,12 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         calendarList.remove(at: indexPath.row)
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
+        
+    }
+    
+    func configureText(for cell: UITableViewCell, with item: CalendarItem) {
+        let label = cell.viewWithTag(99) as! UILabel
+        label.text = item.title
         
     }
 
@@ -124,6 +142,12 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         if segue.identifier == "AddItem" {
             let controller = segue.destination as! AddCalendarItemViewController
             controller.delegate = self
+        } else if segue.identifier == "EditItem" {
+            let controller = segue.destination as! AddCalendarItemViewController
+            controller.delegate = self
+            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+                controller.itemToEdit = calendarList[indexPath.row]
+            }
         }
     }
 

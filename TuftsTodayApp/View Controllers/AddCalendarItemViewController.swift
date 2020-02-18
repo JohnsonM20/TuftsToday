@@ -11,6 +11,7 @@ import UIKit
 protocol addCalendarItemViewControllerDelegate: class {
     func addCalendarItemViewControllerDidCancel(_ controller: AddCalendarItemViewController)
     func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishAdding item: CalendarItem)
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing item: CalendarItem)
 }
 
 class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate {
@@ -18,10 +19,17 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     weak var delegate: addCalendarItemViewControllerDelegate?
+    var itemToEdit: CalendarItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
+        
+        if let item = itemToEdit {
+            title = "Edit Item"
+            textField.text = item.title
+            doneBarButton.isEnabled = true
+        }
             
     }
     
@@ -41,9 +49,14 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
         
     }
     @IBAction func done() {
-        let item = CalendarItem()
-        item.title = textField.text!
-        delegate?.addCalendarItemViewController(self, didFinishAdding: item)
+        if let item = itemToEdit {
+            item.title = textField.text!
+            delegate?.addCalendarItemViewController(self,didFinishEditing: item)
+        } else {
+            let item = CalendarItem()
+            item.title = textField.text!
+            delegate?.addCalendarItemViewController(self, didFinishAdding: item)
+        }
         
     }
     

@@ -10,7 +10,11 @@ import UIKit
 import SwiftSoup
 import Foundation
 
-class EventViewController: UITableViewController {
+class EventViewController: UITableViewController, ViewEventDetailsViewControllerDelegate {
+    func viewEventDetailsViewController(controller: ViewEventDetailsViewController) {
+        navigationController?.popViewController(animated:true)
+    }
+    
     //only has events
     var eventList: [EventItemResponse] = []
     
@@ -47,7 +51,6 @@ class EventViewController: UITableViewController {
                 let newEvent = EventRow(title: startDate)
                 eventAndDateList.append(newEvent)
             } else if startTime != dateFormatter(dateString: eventList[index-1].startDateTime, convertTo: "\(timeTypes.toTimeOfDay)"){
-                    
                 let newEvent = EventRow(title: startDate)
                 eventAndDateList.append(newEvent)
             }
@@ -154,7 +157,6 @@ class EventViewController: UITableViewController {
         } else {
         //print("new day cell")
             let cell = tableView.dequeueReusableCell(withIdentifier: "NewDay", for: indexPath)
-            //cell.selectionStyle = .none;
             
             let date = cell.viewWithTag(10) as! UILabel
             date.text = eventAndDateList[indexPath.row].title
@@ -162,7 +164,6 @@ class EventViewController: UITableViewController {
         }
 
         return cell
-        //}
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -265,20 +266,16 @@ class EventViewController: UITableViewController {
     }
     */
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "ViewItem" {
+            let controller = segue.destination as! ViewEventDetailsViewController
+            controller.delegate = self// as? ViewEventDetailsViewControllerDelegate
+            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+                controller.itemViewed = eventAndDateList[indexPath.row] as! Event
+            }
+        }
     }
-    */
-
-
 }
-
-
 
 //You can add this extension to convert your html code to a regular string:
 extension Data {

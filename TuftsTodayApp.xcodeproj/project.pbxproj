@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3410E25423FB5B7100BF9A97 /* ViewEventDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410E25323FB5B7100BF9A97 /* ViewEventDetailsViewController.swift */; };
 		342A44C023F9619600545EFA /* MealsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342A44BF23F9619600545EFA /* MealsViewController.swift */; };
 		342A44C323F98C4700545EFA /* TuftsToday.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 342A44C123F98C4700545EFA /* TuftsToday.xcdatamodeld */; };
 		342A44C723F98F0800545EFA /* EventItemResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342A44C623F98F0800545EFA /* EventItemResponse.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3410E25323FB5B7100BF9A97 /* ViewEventDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewEventDetailsViewController.swift; sourceTree = "<group>"; };
 		342A44BF23F9619600545EFA /* MealsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealsViewController.swift; sourceTree = "<group>"; };
 		342A44C223F98C4700545EFA /* TuftsToday.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TuftsToday.xcdatamodel; sourceTree = "<group>"; };
 		342A44C623F98F0800545EFA /* EventItemResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventItemResponse.swift; sourceTree = "<group>"; };
@@ -68,9 +70,10 @@
 			isa = PBXGroup;
 			children = (
 				34BDFC8923F394D5003F3D23 /* EventViewController.swift */,
+				3410E25323FB5B7100BF9A97 /* ViewEventDetailsViewController.swift */,
+				343B0D0723F775A3009BA08A /* CalendarViewController.swift */,
 				3479117923F9E6A3009FE23E /* AddCalendarItemViewController.swift */,
 				34BDFC7723F39304003F3D23 /* FirstViewController.swift */,
-				343B0D0723F775A3009BA08A /* CalendarViewController.swift */,
 				34BDFC7923F39304003F3D23 /* SecondViewController.swift */,
 				343B0D0523F7599E009BA08A /* PopoverViewController.swift */,
 				342A44BF23F9619600545EFA /* MealsViewController.swift */,
@@ -201,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BDFC7A23F39304003F3D23 /* SecondViewController.swift in Sources */,
+				3410E25423FB5B7100BF9A97 /* ViewEventDetailsViewController.swift in Sources */,
 				34BDFC7823F39304003F3D23 /* FirstViewController.swift in Sources */,
 				342A44CB23F9A90700545EFA /* EventRow.swift in Sources */,
 				34BDFC7423F39304003F3D23 /* AppDelegate.swift in Sources */,
