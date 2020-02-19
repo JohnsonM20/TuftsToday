@@ -17,8 +17,9 @@ class Event: EventRow{
     var startTime: String = ""
     var endTime: String = ""
     var eventID: Int = 0
+    var webLink: String = ""
     
-    init(title: String, description: String, location: String, startDay: String, startTime: String, endTime: String, eventID: Int){
+    init(title: String, description: String, location: String, startDay: String, startTime: String, endTime: String, eventID: Int, webLink: String){
         super.init(title: title)
         self.description = description
         self.location = location
@@ -26,6 +27,7 @@ class Event: EventRow{
         self.startTime = startTime
         self.endTime = endTime
         self.eventID = eventID
+        self.webLink = webLink
     }
     
 }

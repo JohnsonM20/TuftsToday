@@ -10,7 +10,7 @@ import Foundation
 
 class EventItemResponse: Codable, CustomStringConvertible {
     var description: String{
-        return "title: \(title), dateTimeFormatted: \(dateTimeFormatted), location: \(location), startDateTime: \(startDateTime), endDateTime: \(endDateTime), desc: \(desc), eventID: \(eventID)"
+        return "title: \(title), dateTimeFormatted: \(dateTimeFormatted), location: \(location), startDateTime: \(startDateTime), endDateTime: \(endDateTime), desc: \(desc), eventID: \(eventID), webLink: \(webLink)"
     }
     
     var title: String
@@ -20,6 +20,7 @@ class EventItemResponse: Codable, CustomStringConvertible {
     var startDateTime: String
     var endDateTime: String
     var eventID: Int
+    var webLink: String
     
     //var addedRows: Int
 

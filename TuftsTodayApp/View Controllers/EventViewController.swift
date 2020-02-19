@@ -33,13 +33,6 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
         eventList = appDelegate.itemList
         //print(eventList)
         
-        if let stringOne = defaults.string(forKey: defaultKeys.checkedItems) {
-            //print(stringOne)
-            //checkedItems = (stringOne)
-        } else {
-            //print("erhehehe")
-        }
-        
         var index = 0
         for event in eventList{
             
@@ -55,7 +48,7 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
                 eventAndDateList.append(newEvent)
             }
             
-            let newEvent = Event(title: event.title, description: event.desc, location: event.location, startDay: startDate, startTime: startTime, endTime: endTime, eventID: event.eventID)
+            let newEvent = Event(title: event.title, description: event.desc, location: event.location, startDay: startDate, startTime: startTime, endTime: endTime, eventID: event.eventID, webLink: event.webLink)
             eventAndDateList.append(newEvent)
             
             uniqueDays += 1
@@ -271,7 +264,7 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
             let controller = segue.destination as! ViewEventDetailsViewController
             controller.delegate = self// as? ViewEventDetailsViewControllerDelegate
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
-                controller.itemViewed = eventAndDateList[indexPath.row] as! Event
+                controller.itemViewed = eventAndDateList[indexPath.row] as? Event
             }
         }
     }
@@ -300,10 +293,6 @@ extension String {
     var html2String: String {
         return html2AttributedString?.string ?? ""
     }
-}
-
-struct defaultKeys {
-    static let checkedItems = "checkedItemsKey"
 }
 
 enum timeTypes {
