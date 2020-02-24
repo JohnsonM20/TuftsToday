@@ -44,3 +44,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 //http://dyang108.github.io/projects/2016/03/21/tufts-dining-api
 //https://resizeappicon.com/
+/*
+//TODO:
+ Search for events in list
+ Add checked events to calendar
+ Save calendar events across runs
+ Display meals
+ Reddit like functionality for discussions
+ Find Friends section
+ 
+ */

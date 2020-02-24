@@ -27,6 +27,7 @@
 		34BDFC7F23F39305003F3D23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34BDFC7E23F39305003F3D23 /* Assets.xcassets */; };
 		34BDFC8223F39305003F3D23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34BDFC8023F39305003F3D23 /* LaunchScreen.storyboard */; };
 		34BDFC8A23F394D5003F3D23 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BDFC8923F394D5003F3D23 /* EventViewController.swift */; };
+		34C8C70C23FF421D00E44E2D /* CustomFieldResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C8C70B23FF421D00E44E2D /* CustomFieldResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		34BDFC8123F39305003F3D23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		34BDFC8323F39305003F3D23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34BDFC8923F394D5003F3D23 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
+		34C8C70B23FF421D00E44E2D /* CustomFieldResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFieldResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 			children = (
 				342A44CC23F9AA3E00545EFA /* Event.swift */,
 				342A44CA23F9A90700545EFA /* EventRow.swift */,
+				34C8C70B23FF421D00E44E2D /* CustomFieldResponse.swift */,
 				342A44C623F98F0800545EFA /* EventItemResponse.swift */,
 				342A44C823F98F5900545EFA /* EventsResponse.swift */,
 			);
@@ -218,6 +221,7 @@
 				3479117A23F9E6A3009FE23E /* AddCalendarItemViewController.swift in Sources */,
 				342A44C023F9619600545EFA /* MealsViewController.swift in Sources */,
 				342A44CD23F9AA3E00545EFA /* Event.swift in Sources */,
+				34C8C70C23FF421D00E44E2D /* CustomFieldResponse.swift in Sources */,
 				3484C42223F8A73A00D55F55 /* TuftsData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

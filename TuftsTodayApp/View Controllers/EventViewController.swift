@@ -15,15 +15,10 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
         navigationController?.popViewController(animated:true)
     }
     
-    //only has events
     var eventList: [EventItemResponse] = []
-    
-    //new list of all rows
     var eventAndDateList: [EventRow] = []
-    
     var checkedItems: Set<Int> = []
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    let defaults = UserDefaults.standard
     var uniqueDays = 0
     
     override func viewDidLoad() {
@@ -31,21 +26,40 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
         navigationController?.navigationBar.prefersLargeTitles = true
         
         eventList = appDelegate.itemList
-        //print(eventList)
+        let todaysDate = Date()
+        //print("Today's Date: \(todaysDate)")
         
         var index = 0
         for event in eventList{
-            
+            //print("Today's Starting Date: \(event.startDateTime)")
             let startDate = dateFormatter(dateString: event.startDateTime, convertTo: "\(timeTypes.toDate)")
+            let endDate = dateFormatter(dateString: event.endDateTime, convertTo: "\(timeTypes.toDate)")
             let startTime = dateFormatter(dateString: event.startDateTime, convertTo: "\(timeTypes.toTimeOfDay)")
             let endTime = dateFormatter(dateString: event.endDateTime, convertTo: "\(timeTypes.toTimeOfDay)")
             
-            if index == 0{
-                let newEvent = EventRow(title: startDate)
-                eventAndDateList.append(newEvent)
-            } else if startTime != dateFormatter(dateString: eventList[index-1].startDateTime, convertTo: "\(timeTypes.toTimeOfDay)"){
-                let newEvent = EventRow(title: startDate)
-                eventAndDateList.append(newEvent)
+            if index == 0 || startDate != dateFormatter(dateString: eventList[index-1].startDateTime, convertTo: "\(timeTypes.toDate)"){
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                let itemDate = dateFormatter.date(from: event.startDateTime)!
+                if itemDate >= todaysDate{
+                    //if startDate != endDate{
+                    //    let newEvent = EventRow(title: "\(startDate) - \(endDate)")
+                    //    eventAndDateList.append(newEvent)
+                    //} else {
+                        let newEvent = EventRow(title: "\(startDate)")
+                        eventAndDateList.append(newEvent)
+                    //}
+                    
+                } else {
+                    if startDate != endDate{
+                        let newEvent = EventRow(title: "\(startDate) - \(endDate)")
+                        eventAndDateList.append(newEvent)
+                    } else {
+                        let newEvent = EventRow(title: "\(startDate)")
+                        eventAndDateList.append(newEvent)
+                    }
+                }
             }
             
             let newEvent = Event(title: event.title, description: event.desc, location: event.location, startDay: startDate, startTime: startTime, endTime: endTime, eventID: event.eventID, webLink: event.webLink)
@@ -55,19 +69,10 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
             index += 1
         }
         
-        //print(eventAndDateList)
-        print("Unique Days: \(uniqueDays)")
-        print("Number of Events: \(eventList.count)")
-        print(eventAndDateList.count)
-        
         ///use this code to change the appearence of checkmark later
         //let checkImage = UIImage(named: "checkmark.png")
         //let checkmark = UIImageView(image: checkImage)
         //cell.accessoryView = checkmark
-        
-        // Uncomment the following line to preserve selection between presentations
-        //self.clearsSelectionOnViewWillAppear = false
-
     }
     
     func getEventsFromSite() -> [EventItemResponse]{
@@ -113,8 +118,6 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //unique days used for finding total row numbers
-        //to check which cell to use,
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
         
@@ -123,35 +126,28 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
             let name = cell.viewWithTag(1) as! UILabel
             let info = cell.viewWithTag(2) as! UILabel
             let check = cell.viewWithTag(1001) as! UILabel
-            
-            //let rowNumber = indexPath.row//-uniqueDaysSoFar
-            //eventList[rowNumber].addedRows = uniqueDaysSoFar
-            //print(eventList[rowNumber].addedRows)
-            
             let startingTime = event.startTime
             let endingTime = event.endTime
             
             name.text = event.title.html2String
             info.text = startingTime.html2String
             if startingTime != endingTime{
-                info.text = info.text! + " - " + endingTime.html2String
+                info.text = info.text! + " - " + "\(endingTime)"
             }
             if event.location != ""{
                 info.text = info.text! + " | " + event.location.html2String
             }
             
             if checkedItems.contains(event.eventID){
-                //cell.accessoryType = .checkmark
                 check.text = "√"
             } else {
-                //cell.accessoryType = .none
                 check.text = ""
             }
         } else {
-        //print("new day cell")
+            //print("new day cell")
             let cell = tableView.dequeueReusableCell(withIdentifier: "NewDay", for: indexPath)
-            
             let date = cell.viewWithTag(10) as! UILabel
+            
             date.text = eventAndDateList[indexPath.row].title
             return cell
         }
@@ -169,38 +165,19 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
         if let cell = tableView.cellForRow(at: indexPath){
             
             if let event = eventAndDateList[indexPath.row] as? Event  {
-                /*
-                let check = cell.viewWithTag(1001) as! UILabel
-                
-                if checkedItems.contains(event.eventID) && cell.selectionStyle != .none{
-                    //print("unchecked!")
-                    //cell.accessoryType = .none
-                    check.text = ""
-                    checkedItems.remove(event.eventID)
-                } else if cell.selectionStyle != .none{
-                    //cell.accessoryType = .checkmark
-                    //print("checked!")
-                    checkedItems.insert(event.eventID)
-                    check.text = "√"
-                }
-                */
-                
                 configureCheckmark(for: cell, with: event)
             }
 
         }
-        //defaults.set(checkedItems, forKey: defaultKeys.checkedItems)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func configureCheckmark(for cell: UITableViewCell, with item: Event) {
         let label = cell.viewWithTag(1001) as! UILabel
         if checkedItems.contains(item.eventID){
-            //cell.accessoryType = .checkmark
             label.text = ""
             checkedItems.remove(item.eventID)
         } else {
-            //cell.accessoryType = .none
             label.text = "√"
             checkedItems.insert(item.eventID)
         }
@@ -224,41 +201,6 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
         self.present(alert, animated: true)
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ViewItem" {
             let controller = segue.destination as! ViewEventDetailsViewController
@@ -270,7 +212,7 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
     }
 }
 
-//You can add this extension to convert your html code to a regular string:
+//Convert html code to a regular string:
 extension Data {
     var html2AttributedString: NSAttributedString? {
         do {
@@ -285,7 +227,6 @@ extension Data {
     }
 }
 
-//You can add this extension to convert your html code to a regular string:
 extension String {
     var html2AttributedString: NSAttributedString? {
         return Data(utf8).html2AttributedString

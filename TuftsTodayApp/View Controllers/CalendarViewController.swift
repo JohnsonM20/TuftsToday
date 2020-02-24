@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CalendarItem: NSObject {
+class CalendarItem: NSObject, Encodable, Decodable {
     
     var title: String = ""
 }
@@ -25,6 +25,7 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         let indexPaths = [indexPath]
         tableView.insertRows(at: indexPaths, with: .automatic)
         navigationController?.popViewController(animated:true)
+        saveCalendarItems()
     }
     
     func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing item: CalendarItem) {
@@ -32,43 +33,28 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
             let indexPath = IndexPath(row: index, section: 0)
             if let cell = tableView.cellForRow(at: indexPath) {
                 configureText(for: cell, with: item)
+            }
         }
+        navigationController?.popViewController(animated:true)
+        saveCalendarItems()
     }
-    navigationController?.popViewController(animated:true) }
-    
     
     var calendarList: [CalendarItem] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         navigationController?.navigationBar.prefersLargeTitles = true
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        
+        loadCalendarItems()
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
-    // MARK: - Table view data source
-
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return calendarList.count
-    }
-    @IBAction func addToCalendar(_ sender: Any) {
-        let newRowIndex = calendarList.count
-        let item = CalendarItem()
-        item.title = "I am a new row"
-        calendarList.append(item)
-        let indexPath = IndexPath(row: newRowIndex, section: 0)
-        let indexPaths = [indexPath]
-        tableView.insertRows(at: indexPaths, with: .automatic)
     }
     
     @IBAction func editClasses(_ sender: Any) {
@@ -80,8 +66,6 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         let cell = tableView.dequeueReusableCell(withIdentifier: "CalendarItem", for: indexPath)
         cell.selectionStyle = .none;
         
-        //let title = cell.viewWithTag(99) as! UILabel
-        //title.text = calendarList[indexPath.row].title
         let item = calendarList[indexPath.row]
         configureText(for: cell, with: item)
         
@@ -93,7 +77,7 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         calendarList.remove(at: indexPath.row)
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
-        
+        saveCalendarItems()
     }
     
     func configureText(for cell: UITableViewCell, with item: CalendarItem) {
@@ -101,41 +85,36 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         label.text = item.title
         
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    func documentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+            return paths[0]
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    func dataFilePath() -> URL {
+        return documentsDirectory().appendingPathComponent("Calendar.plist")
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    func saveCalendarItems() {
+      let encoder = PropertyListEncoder()
+      do {
+        let data = try encoder.encode(calendarList)
+        try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
+        } catch {
+        print("Error encoding item array: \(error.localizedDescription)")
+        }
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    func loadCalendarItems() {
+      let path = dataFilePath()
+      if let data = try? Data(contentsOf: path) {
+        let decoder = PropertyListDecoder()
+        do {
+            calendarList = try decoder.decode([CalendarItem].self, from: data)
+        } catch {
+            print("Error decoding item array: \(error.localizedDescription)") }
+        }
     }
-    */
 
     // MARK:- Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -150,5 +129,4 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
             }
         }
     }
-
 }

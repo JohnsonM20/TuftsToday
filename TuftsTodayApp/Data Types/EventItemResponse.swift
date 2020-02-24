@@ -10,6 +10,7 @@ import Foundation
 
 class EventItemResponse: Codable, CustomStringConvertible {
     var description: String{
+        //return "title: \(title), dateTimeFormatted: \(dateTimeFormatted), location: \(location), startDateTime: \(startDateTime), endDateTime: \(endDateTime), desc: \(desc), eventID: \(eventID), webLink: \(webLink), customFields: \(customFields)"
         return "title: \(title), dateTimeFormatted: \(dateTimeFormatted), location: \(location), startDateTime: \(startDateTime), endDateTime: \(endDateTime), desc: \(desc), eventID: \(eventID), webLink: \(webLink)"
     }
     
@@ -22,6 +23,6 @@ class EventItemResponse: Codable, CustomStringConvertible {
     var eventID: Int
     var webLink: String
     
-    //var addedRows: Int
+    //var customFields = [CustomFieldResponse]()
 
 }

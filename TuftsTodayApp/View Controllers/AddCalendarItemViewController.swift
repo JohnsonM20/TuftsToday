@@ -61,8 +61,7 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
     }
     
     // MARK:- Text Field Delegates
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange,
-                   replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let oldText = textField.text!
         let stringRange = Range(range, in:oldText)!
         let newText = oldText.replacingCharacters(in: stringRange, with: string)
@@ -70,7 +69,6 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
             doneBarButton.isEnabled = false
         } else {
             doneBarButton.isEnabled = true
-            
         }
         return true
     }
