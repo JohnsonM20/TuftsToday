@@ -1,5 +1,5 @@
 //
-//  Item.swift
+//  EventItemResponse.swift
 //  TuftsTodayApp
 //
 //  Created by Matthew Johnson on 2/16/20.

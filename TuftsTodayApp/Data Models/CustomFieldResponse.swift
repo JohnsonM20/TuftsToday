@@ -1,5 +1,5 @@
 //
-//  customFieldResponse.swift
+//  CustomFieldResponse.swift
 //  TuftsTodayApp
 //
 //  Created by Matthew Johnson on 2/20/20.

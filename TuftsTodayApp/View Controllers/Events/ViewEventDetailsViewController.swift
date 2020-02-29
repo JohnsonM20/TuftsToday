@@ -48,13 +48,12 @@ class ViewEventDetailsViewController: UITableViewController {
                     addEventDetail(title: "Website", description: link)
                 }
             } catch{
-                print("fail")
+                print("fail1")
             }
             eventDetails.attributedText = attributedString
         } else {
-            print("fail")
+            print("fail2")
         }
-        
     }
     
     func addEventDetail(title: String, description: String){

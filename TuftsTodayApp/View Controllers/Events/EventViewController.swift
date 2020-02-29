@@ -1,5 +1,5 @@
 //
-//  ChecklistViewController.swift
+//  EventViewController.swift
 //  TuftsToday
 //
 //  Created by Matthew Johnson on 2/11/20.
@@ -10,21 +10,30 @@ import UIKit
 import SwiftSoup
 import Foundation
 
-class EventViewController: UITableViewController, ViewEventDetailsViewControllerDelegate {
+class EventViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ViewEventDetailsViewControllerDelegate {
     func viewEventDetailsViewController(controller: ViewEventDetailsViewController) {
         navigationController?.popViewController(animated:true)
     }
     
+    @IBOutlet weak var table: UITableView!
+    @IBOutlet weak var segmentControl: UISegmentedControl!
+    
     var eventList: [EventItemResponse] = []
     var eventAndDateList: [EventRow] = []
     var checkedItems: Set<Int> = []
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    var uniqueDays = 0
     
+    var unofficialEventList: [EventRow] = []
+    var isOfficialEvents = true
+    lazy var rowsToDisplay = eventAndDateList
+    
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    //MARK: fr
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = true
         
+        segmentControl.addTarget(self, action: #selector(handleSegmentChange), for: .valueChanged)
         eventList = appDelegate.itemList
         let todaysDate = Date()
         //print("Today's Date: \(todaysDate)")
@@ -65,7 +74,6 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
             let newEvent = Event(title: event.title, description: event.desc, location: event.location, startDay: startDate, startTime: startTime, endTime: endTime, eventID: event.eventID, webLink: event.webLink)
             eventAndDateList.append(newEvent)
             
-            uniqueDays += 1
             index += 1
         }
         
@@ -94,9 +102,24 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
         }
         return eventList
     }
+    
+    @objc private func handleSegmentChange(){
+        isOfficialEvents = !isOfficialEvents
+        //print(segmentControl.selectedSegmentIndex)
+        
+        switch segmentControl.selectedSegmentIndex {
+        case 0:
+            rowsToDisplay = eventAndDateList
+        case 1:
+            rowsToDisplay = unofficialEventList
+        default:
+            rowsToDisplay = eventAndDateList
+        }
+        table.reloadData()
+    }
 
     // MARK: - Table view data source
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
@@ -117,51 +140,55 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
         return ""
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
         
-        if let event = eventAndDateList[indexPath.row] as? Event  {
-            //print("item cell")
-            let name = cell.viewWithTag(1) as! UILabel
-            let info = cell.viewWithTag(2) as! UILabel
-            let check = cell.viewWithTag(1001) as! UILabel
-            let startingTime = event.startTime
-            let endingTime = event.endTime
-            
-            name.text = event.title.html2String
-            info.text = startingTime.html2String
-            if startingTime != endingTime{
-                info.text = info.text! + " - " + "\(endingTime)"
+        if let event = eventAndDateList[indexPath.row] as? Event{
+            if isOfficialEvents == true{
+                //print("item cell")
+                let name = cell.viewWithTag(1) as! UILabel
+                let info = cell.viewWithTag(2) as! UILabel
+                let check = cell.viewWithTag(1001) as! UILabel
+                let startingTime = event.startTime
+                let endingTime = event.endTime
+                
+                name.text = event.title.html2String
+                info.text = startingTime.html2String
+                if startingTime != endingTime{
+                    info.text = info.text! + " - " + "\(endingTime)"
+                }
+                if event.location != ""{
+                    info.text = info.text! + " | " + event.location.html2String
+                }
+                
+                if checkedItems.contains(event.eventID){
+                    check.text = "√"
+                } else {
+                    check.text = ""
+                }
             }
-            if event.location != ""{
-                info.text = info.text! + " | " + event.location.html2String
-            }
-            
-            if checkedItems.contains(event.eventID){
-                check.text = "√"
-            } else {
-                check.text = ""
-            }
-        } else {
+        } else if isOfficialEvents == true{
             //print("new day cell")
             let cell = tableView.dequeueReusableCell(withIdentifier: "NewDay", for: indexPath)
             let date = cell.viewWithTag(10) as! UILabel
             
             date.text = eventAndDateList[indexPath.row].title
             return cell
+        } else {
+            
         }
 
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return eventAndDateList.count
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return rowsToDisplay.count
         
     }
     
     // MARK:- Table View Delegate
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath){
             
             if let event = eventAndDateList[indexPath.row] as? Event  {
@@ -184,11 +211,10 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
     }
     
     @IBAction func scrollToTop(_ sender: Any) {
-        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top, animated: true)
+        table.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top, animated: true)
     }
     
     @IBAction func addEvent(_ sender: Any) {
-        
         let alert = UIAlertController(title: "This will take you to the Tufts website. Do you want to continue?", message: "", preferredStyle: .alert)
 
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
@@ -205,7 +231,7 @@ class EventViewController: UITableViewController, ViewEventDetailsViewController
         if segue.identifier == "ViewItem" {
             let controller = segue.destination as! ViewEventDetailsViewController
             controller.delegate = self// as? ViewEventDetailsViewControllerDelegate
-            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+            if let indexPath = table.indexPath(for: sender as! UITableViewCell) {
                 controller.itemViewed = eventAndDateList[indexPath.row] as? Event
             }
         }
