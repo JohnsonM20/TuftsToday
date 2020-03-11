@@ -18,6 +18,9 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var table: UITableView!
     @IBOutlet weak var segmentControl: UISegmentedControl!
     
+    @IBOutlet weak var submitButton: UIBarButtonItem!
+    @IBOutlet weak var todayButton: UIBarButtonItem!
+    
     var eventList: [EventItemResponse] = []
     var eventAndDateList: [EventRow] = []
     var checkedItems: Set<Int> = []
@@ -31,7 +34,6 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
     //MARK: fr
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.prefersLargeTitles = true
         
         segmentControl.addTarget(self, action: #selector(handleSegmentChange), for: .valueChanged)
         eventList = appDelegate.itemList

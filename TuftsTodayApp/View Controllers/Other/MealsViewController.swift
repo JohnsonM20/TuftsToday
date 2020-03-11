@@ -10,7 +10,7 @@ import UIKit
 import SwiftSoup
 
 class MealsViewController: UITableViewController {
-
+    //Make ui alert controller for different places
     override func viewDidLoad() {
         super.viewDidLoad()
         //https://dining.tufts.edu/
@@ -25,9 +25,9 @@ class MealsViewController: UITableViewController {
             let doc: Document = try SwiftSoup.parse(html)
             //print(2)
 
-            let test: String = try doc.attr("tr")
+            //let test: String = try doc.attr("tr")
 
-        } catch Exception.Error(let type, let message) {
+        } catch Exception.Error(let message) {
             print(message)
         } catch {
             print("error")

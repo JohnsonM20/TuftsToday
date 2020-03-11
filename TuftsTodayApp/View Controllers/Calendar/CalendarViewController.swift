@@ -7,46 +7,46 @@
 //
 
 import UIKit
-
-class CalendarItem: NSObject, Encodable, Decodable {
-    
-    var title: String = ""
-}
+import CoreData
 
 class CalendarViewController: UITableViewController, addCalendarItemViewControllerDelegate {
     func addCalendarItemViewControllerDidCancel(_ controller: AddCalendarItemViewController) {
         navigationController?.popViewController(animated:true)
     }
     
-    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishAdding item: CalendarItem) {
-        let newRowIndex = calendarList.count
-        calendarList.append(item)
-        let indexPath = IndexPath(row: newRowIndex, section: 0)
-        let indexPaths = [indexPath]
-        tableView.insertRows(at: indexPaths, with: .automatic)
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishAdding name: String, date: Date, remind: Bool, id: String) {
+        addItem(name: name, date: date, remind: remind, id: id)
         navigationController?.popViewController(animated:true)
-        saveCalendarItems()
+        self.tableView.reloadData()
     }
     
-    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing item: CalendarItem) {
-        if let index = calendarList.firstIndex(of: item) {
-            let indexPath = IndexPath(row: index, section: 0)
-            if let cell = tableView.cellForRow(at: indexPath) {
-                configureText(for: cell, with: item)
-            }
-        }
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing name: String, date: Date, remind: Bool, id: String) {
+        editItem(name: name, date: date, remind: remind, id: id)
         navigationController?.popViewController(animated:true)
-        saveCalendarItems()
+        self.tableView.reloadData()
     }
     
-    var calendarList: [CalendarItem] = []
+    var calendarItems: [CalendarItemData] = []
+    var lastIDClicked: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        loadCalendarItems()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+      super.viewWillAppear(animated)
+      
+      guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+      let managedContext = appDelegate.persistentContainer.viewContext
+      let fetchRequest = NSFetchRequest<CalendarItemData>(entityName: "CalendarItemData")
 
+      do {
+        calendarItems = try managedContext.fetch(fetchRequest)
+      } catch let error as NSError {
+        print("Could not fetch. \(error), \(error.userInfo)")
+      }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -54,78 +54,126 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return calendarList.count
+        return calendarItems.count
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //if let cell = tableView.cellForRow(at: indexPath){
+        //}
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     @IBAction func editClasses(_ sender: Any) {
-        
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CalendarItem", for: indexPath)
-        cell.selectionStyle = .none;
         
-        let item = calendarList[indexPath.row]
+        let item = calendarItems[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CalendarItem", for: indexPath)
         configureText(for: cell, with: item)
         
         return cell
-
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        calendarList.remove(at: indexPath.row)
-        let indexPaths = [indexPath]
-        tableView.deleteRows(at: indexPaths, with: .automatic)
-        saveCalendarItems()
+        if editingStyle == .delete{
+            guard let appDelegate =
+              UIApplication.shared.delegate as? AppDelegate else {
+              return
+            }
+              
+            let managedContext = appDelegate.persistentContainer.viewContext
+            managedContext.delete(calendarItems[indexPath.row])
+            
+            calendarItems.remove(at: indexPath.row) 
+            //tableView.deleteRows(at: [indexPath], with: .fade)
+            self.tableView.reloadData()
+            
+            do {
+              try managedContext.save()
+            } catch let error as NSError {
+              print("Could not delete. \(error), \(error.userInfo)")
+            }
+        }
     }
     
-    func configureText(for cell: UITableViewCell, with item: CalendarItem) {
-        let label = cell.viewWithTag(99) as! UILabel
-        label.text = item.title
+    func configureText(for cell: UITableViewCell, with item: CalendarItemData) {
+        let name = cell.viewWithTag(99) as! UILabel
+        let date = cell.viewWithTag(100) as! UILabel
+        let time = dateFormatter(dateString: (item.value(forKeyPath: "date") as? Date)!.description)
+        
+        name.text = item.value(forKeyPath: "name") as? String
+        date.text = time
         
     }
     
-    func documentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-            return paths[0]
-    }
-    
-    func dataFilePath() -> URL {
-        return documentsDirectory().appendingPathComponent("Calendar.plist")
-    }
-    
-    func saveCalendarItems() {
-      let encoder = PropertyListEncoder()
+    func addItem(name: String, date: Date, remind: Bool, id: String) {
+        print("ADDING NEW ITEM \(name)")
+      guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+        return
+      }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let entity = NSEntityDescription.entity(forEntityName: "CalendarItemData", in: managedContext)!
+        let item = CalendarItemData(entity: entity, insertInto: managedContext)
+        
+        item.setValue(name, forKeyPath: "name")
+        item.setValue(date, forKey: "date")
+        item.setValue(remind, forKey: "shouldRemind")
+        item.setValue(id, forKey: "itemID")
+        
       do {
-        let data = try encoder.encode(calendarList)
-        try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
-        } catch {
-        print("Error encoding item array: \(error.localizedDescription)")
-        }
+        try managedContext.save()
+        calendarItems.append(item)
+      } catch let error as NSError {
+        print("Could not save. \(error), \(error.userInfo)")
+      }
     }
     
-    func loadCalendarItems() {
-      let path = dataFilePath()
-      if let data = try? Data(contentsOf: path) {
-        let decoder = PropertyListDecoder()
-        do {
-            calendarList = try decoder.decode([CalendarItem].self, from: data)
-        } catch {
-            print("Error decoding item array: \(error.localizedDescription)") }
-        }
-    }
+    func editItem(name: String, date: Date, remind: Bool, id: String){
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<CalendarItemData>(entityName: "CalendarItemData")
+        let filterPredicate = NSPredicate(format: "itemID == %@", id)
+        fetchRequest.predicate = filterPredicate
 
+        if let item = calendarItems.first(where: { $0.itemID == id }) {
+            print("The first negative number is \(id).")
+            item.setValue(name, forKeyPath: "name")
+            item.setValue(date, forKey: "date")
+            item.setValue(remind, forKey: "shouldRemind")
+            item.setValue(id, forKey: "itemID")
+        }
+        
+      do {
+        try managedContext.save()
+      } catch let error as NSError {
+        print("Could not save. \(error), \(error.userInfo)")
+      }
+    }
+    
+    func dateFormatter(dateString: String) -> String{
+        //https://nsdateformatter.com/
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        let date = dateFormatter.date(from: dateString)!
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "h:mm a"
+        return dateFormatterPrint.string(from: date)
+    }
+    
     // MARK:- Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddItem" {
             let controller = segue.destination as! AddCalendarItemViewController
             controller.delegate = self
+            
         } else if segue.identifier == "EditItem" {
             let controller = segue.destination as! AddCalendarItemViewController
             controller.delegate = self
+            
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
-                controller.itemToEdit = calendarList[indexPath.row]
+                controller.itemToEdit = calendarItems[indexPath.row]
             }
         }
     }

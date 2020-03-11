@@ -7,27 +7,39 @@
 //
 
 import UIKit
+import CoreData
 
 protocol addCalendarItemViewControllerDelegate: class {
     func addCalendarItemViewControllerDidCancel(_ controller: AddCalendarItemViewController)
-    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishAdding item: CalendarItem)
-    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing item: CalendarItem)
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishAdding name: String, date: Date, remind: Bool, id: String)
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing name: String, date: Date, remind: Bool, id: String)
 }
 
 class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate {
 
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var reminder: UISegmentedControl!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
+    
     weak var delegate: addCalendarItemViewControllerDelegate?
-    var itemToEdit: CalendarItem?
+    var itemToEdit: CalendarItemData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
         
+        datePicker.minimumDate = Date()
         if let item = itemToEdit {
             title = "Edit Item"
-            textField.text = item.title
+            textField.text = item.name
+            datePicker.date = item.date!
+            
+            if item.shouldRemind == true{
+                reminder.selectedSegmentIndex = 0
+            } else {
+                reminder.selectedSegmentIndex = 1
+            }
             doneBarButton.isEnabled = true
         }
             
@@ -40,22 +52,25 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
     
     override func viewWillAppear(_ animated: Bool) { super.viewWillAppear(animated)
         textField.becomeFirstResponder()
-        
     }
     
     // MARK:- Actions
     @IBAction func cancel() {
         delegate?.addCalendarItemViewControllerDidCancel(self)
-        
     }
+    
     @IBAction func done() {
-        if let item = itemToEdit {
-            item.title = textField.text!
-            delegate?.addCalendarItemViewController(self,didFinishEditing: item)
+        let name = textField.text!
+        let date = datePicker.date
+        var remind = true
+        
+        if reminder.selectedSegmentIndex != 0{
+            remind = false
+        }
+        if itemToEdit != nil {
+            delegate?.addCalendarItemViewController(self,didFinishEditing: name, date: date, remind: remind, id: itemToEdit!.itemID)
         } else {
-            let item = CalendarItem()
-            item.title = textField.text!
-            delegate?.addCalendarItemViewController(self, didFinishAdding: item)
+            delegate?.addCalendarItemViewController(self, didFinishAdding: name, date: date, remind: remind, id: UUID().uuidString)
         }
         
     }
