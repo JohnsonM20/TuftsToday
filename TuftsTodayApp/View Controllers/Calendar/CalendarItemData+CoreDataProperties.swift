@@ -17,9 +17,9 @@ extension CalendarItemData {
         return NSFetchRequest<CalendarItemData>(entityName: "CalendarItemData")
     }
 
-    @NSManaged public var date: Date?
+    @NSManaged public var date: Date
     @NSManaged public var itemID: String
-    @NSManaged public var name: String?
+    @NSManaged public var name: String
     @NSManaged public var shouldRemind: Bool
 
 }

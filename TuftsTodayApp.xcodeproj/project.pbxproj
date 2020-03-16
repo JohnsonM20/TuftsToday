@@ -19,6 +19,7 @@
 		343B0D0423F443A8009BA08A /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 343B0D0323F443A8009BA08A /* SwiftSoup */; };
 		343B0D0623F7599E009BA08A /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B0D0523F7599E009BA08A /* PopoverViewController.swift */; };
 		343B0D0823F775A3009BA08A /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B0D0723F775A3009BA08A /* CalendarViewController.swift */; };
+		344DD8A0241A6FDF00128DE1 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344DD89F241A6FDF00128DE1 /* Formatter.swift */; };
 		34732E5523F88ED000883F9B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34732E5423F88ED000883F9B /* Main.storyboard */; };
 		3479117A23F9E6A3009FE23E /* AddCalendarItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3479117923F9E6A3009FE23E /* AddCalendarItemViewController.swift */; };
 		34BDFC7423F39304003F3D23 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BDFC7323F39304003F3D23 /* AppDelegate.swift */; };
@@ -44,6 +45,7 @@
 		343B0D0523F7599E009BA08A /* PopoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
 		343B0D0723F775A3009BA08A /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		343D85C623F4402800639569 /* SwiftSoup-master */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "SwiftSoup-master"; path = "../../../../SwiftSoup-master"; sourceTree = "<group>"; };
+		344DD89F241A6FDF00128DE1 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		34732E5423F88ED000883F9B /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3479117923F9E6A3009FE23E /* AddCalendarItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCalendarItemViewController.swift; sourceTree = "<group>"; };
 		34BDFC7023F39304003F3D23 /* TuftsToday.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TuftsToday.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,6 +129,7 @@
 				343D85C623F4402800639569 /* SwiftSoup-master */,
 				34BDFC7323F39304003F3D23 /* AppDelegate.swift */,
 				34BDFC7523F39304003F3D23 /* SceneDelegate.swift */,
+				344DD89F241A6FDF00128DE1 /* Formatter.swift */,
 				34732E5423F88ED000883F9B /* Main.storyboard */,
 				342A44C123F98C4700545EFA /* TuftsToday.xcdatamodeld */,
 				34BDFC7E23F39305003F3D23 /* Assets.xcassets */,
@@ -238,6 +241,7 @@
 				34BDFC7823F39304003F3D23 /* FirstViewController.swift in Sources */,
 				342A44CB23F9A90700545EFA /* EventRow.swift in Sources */,
 				34BDFC7423F39304003F3D23 /* AppDelegate.swift in Sources */,
+				344DD8A0241A6FDF00128DE1 /* Formatter.swift in Sources */,
 				342A44C923F98F5900545EFA /* EventsResponse.swift in Sources */,
 				342A44C323F98C4700545EFA /* TuftsToday.xcdatamodeld in Sources */,
 				34BDFC8A23F394D5003F3D23 /* EventViewController.swift in Sources */,

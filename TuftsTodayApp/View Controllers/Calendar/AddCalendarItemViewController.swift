@@ -33,7 +33,7 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
         if let item = itemToEdit {
             title = "Edit Item"
             textField.text = item.name
-            datePicker.date = item.date!
+            datePicker.date = item.date
             
             if item.shouldRemind == true{
                 reminder.selectedSegmentIndex = 0

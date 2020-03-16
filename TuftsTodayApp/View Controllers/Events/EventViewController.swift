@@ -43,12 +43,12 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
         var index = 0
         for event in eventList{
             //print("Today's Starting Date: \(event.startDateTime)")
-            let startDate = dateFormatter(dateString: event.startDateTime, convertTo: "\(timeTypes.toDate)")
-            let endDate = dateFormatter(dateString: event.endDateTime, convertTo: "\(timeTypes.toDate)")
-            let startTime = dateFormatter(dateString: event.startDateTime, convertTo: "\(timeTypes.toTimeOfDay)")
-            let endTime = dateFormatter(dateString: event.endDateTime, convertTo: "\(timeTypes.toTimeOfDay)")
+            let startDate = Formatter.dateFormatter(dateString: event.startDateTime, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toDate)")
+            let endDate = Formatter.dateFormatter(dateString: event.endDateTime, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toDate)")
+            let startTime = Formatter.dateFormatter(dateString: event.startDateTime, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
+            let endTime = Formatter.dateFormatter(dateString: event.endDateTime, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
             
-            if index == 0 || startDate != dateFormatter(dateString: eventList[index-1].startDateTime, convertTo: "\(timeTypes.toDate)"){
+            if index == 0 || startDate != Formatter.dateFormatter(dateString: eventList[index-1].startDateTime, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toDate)"){
                 let dateFormatter = DateFormatter()
                 dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                 dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
@@ -123,23 +123,6 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
     // MARK: - Table view data source
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
-    }
-    
-    func dateFormatter(dateString: String, convertTo: String) -> String{
-        //https://nsdateformatter.com/
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        let date = dateFormatter.date(from: dateString)!
-        let dateFormatterPrint = DateFormatter()
-        if convertTo == "\(timeTypes.toTimeOfDay)"{
-            dateFormatterPrint.dateFormat = "h:mm a"
-            return dateFormatterPrint.string(from: date)
-        } else if convertTo == "\(timeTypes.toDate)"{
-            dateFormatterPrint.dateFormat = "EEEE, MMM d"
-            return dateFormatterPrint.string(from: date)
-        }
-        return ""
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -238,33 +221,4 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
         }
     }
-}
-
-//Convert html code to a regular string:
-extension Data {
-    var html2AttributedString: NSAttributedString? {
-        do {
-            return try NSAttributedString(data: self, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil)
-        } catch {
-            print("error:", error)
-            return  nil
-        }
-    }
-    var html2String: String {
-        return html2AttributedString?.string ?? ""
-    }
-}
-
-extension String {
-    var html2AttributedString: NSAttributedString? {
-        return Data(utf8).html2AttributedString
-    }
-    var html2String: String {
-        return html2AttributedString?.string ?? ""
-    }
-}
-
-enum timeTypes {
-    case toTimeOfDay
-    case toDate
 }

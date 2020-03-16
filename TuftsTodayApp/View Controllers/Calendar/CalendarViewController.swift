@@ -27,26 +27,59 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
     }
     
     var calendarItems: [CalendarItemData] = []
-    var lastIDClicked: String = ""
+    var eventAndDateList:  [Any] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = true
-        
+     
+        var index = 0
+        for event in calendarItems{
+            let startDate = Formatter.dateFormatter(dateString: event.date.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toDate)")
+            let endDate = Formatter.dateFormatter(dateString: event.date.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toDate)")
+            let startTime = Formatter.dateFormatter(dateString: event.date.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
+            let endTime = Formatter.dateFormatter(dateString: event.date.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
+            
+            if index == 0 || startDate != Formatter.dateFormatter(dateString: calendarItems[index-1].date.description, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toDate)"){
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                let itemDate = dateFormatter.date(from: event.date.description)!
+                if itemDate >= Date(){
+                        let newEvent = EventRow(title: "\(startDate)")
+                        eventAndDateList.append(newEvent)
+                } else {
+                    if startDate != endDate{
+                        let newEvent = EventRow(title: "\(startDate) - \(endDate)")
+                        eventAndDateList.append(newEvent)
+                    } else {
+                        let newEvent = EventRow(title: "\(startDate)")
+                        eventAndDateList.append(newEvent)
+                    }
+                }
+            }
+            
+            eventAndDateList.append(event)
+            
+            index += 1
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-      super.viewWillAppear(animated)
+        super.viewWillAppear(animated)
       
-      guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-      let managedContext = appDelegate.persistentContainer.viewContext
-      let fetchRequest = NSFetchRequest<CalendarItemData>(entityName: "CalendarItemData")
-
-      do {
-        calendarItems = try managedContext.fetch(fetchRequest)
-      } catch let error as NSError {
-        print("Could not fetch. \(error), \(error.userInfo)")
-      }
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<CalendarItemData>(entityName: "CalendarItemData")
+        let sectionSortDescriptor = NSSortDescriptor(key: "date", ascending: true)
+        let sortDescriptors = [sectionSortDescriptor]
+        fetchRequest.sortDescriptors = sortDescriptors
+        
+        do {
+            calendarItems = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -100,7 +133,7 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
     func configureText(for cell: UITableViewCell, with item: CalendarItemData) {
         let name = cell.viewWithTag(99) as! UILabel
         let date = cell.viewWithTag(100) as! UILabel
-        let time = dateFormatter(dateString: (item.value(forKeyPath: "date") as? Date)!.description)
+        let time = Formatter.dateFormatter(dateString: (item.value(forKeyPath: "date") as? Date)!.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
         
         name.text = item.value(forKeyPath: "name") as? String
         date.text = time
@@ -149,17 +182,6 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
       } catch let error as NSError {
         print("Could not save. \(error), \(error.userInfo)")
       }
-    }
-    
-    func dateFormatter(dateString: String) -> String{
-        //https://nsdateformatter.com/
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-        let date = dateFormatter.date(from: dateString)!
-        let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "h:mm a"
-        return dateFormatterPrint.string(from: date)
     }
     
     // MARK:- Navigation

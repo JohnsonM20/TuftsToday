@@ -14,7 +14,6 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     public var itemList: [EventItemResponse] = []
-    //var checkedItems: [String] = []
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -23,42 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         let center = UNUserNotificationCenter.current()
         center.delegate = self
-//
-//        center.requestAuthorization(options: [.alert, .sound]) {
-//          granted, error in
-//          if granted {
-//            print("We have permission")
-//
-//          } else {
-//            print("Permission denied")
-//          }
-//        }
-//
-//        let content = UNMutableNotificationContent()
-//        content.title = "Hello!"
-//        content.body = "I am a local notification"
-//        content.sound = UNNotificationSound.default
-//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-//        let request = UNNotificationRequest(identifier: "MyNotification", content: content,
-//        trigger: trigger)
-//        center.add(request)
         
-        /*
-        //Prints out all of the data currently in Calendar view
-        let managedContext = persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "CalendarItemData")
-        do {
-            let results = try managedContext.fetch(fetchRequest)
-            for result in results{
-                if let deviceType = result.value(forKey: "name") as? String, let name = result.value(forKey: "name") as? String{
-                    print("Got device named " + name)
-                }
-            }
-        } catch let error as NSError {
-          print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        //
-        */
         return true
     }
 
@@ -95,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     // MARK: - Core Data Saving support
 
-    func saveContext () {
+    func saveContext() {
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {
@@ -105,6 +69,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
+    }
+    
+    func printData(){
+        //Prints out all of the data currently in Calendar view
+        let managedContext = persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "CalendarItemData")
+        do {
+            let results = try managedContext.fetch(fetchRequest)
+            for result in results{
+                if let name = result.value(forKey: "name") as? String{
+                    print("Got device named " + name)
+                }
+            }
+        } catch let error as NSError {
+          print("Could not fetch. \(error), \(error.userInfo)")
+        }
+    }
+    
+    func testNotofication(){
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) {
+          granted, error in
+          if granted {
+            print("We have permission")
+
+          } else {
+            print("Permission denied")
+          }
+        }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Hello!"
+        content.body = "I am a local notification"
+        content.sound = UNNotificationSound.default
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        let request = UNNotificationRequest(identifier: "MyNotification", content: content,
+        trigger: trigger)
+        center.add(request)
     }
 
 
