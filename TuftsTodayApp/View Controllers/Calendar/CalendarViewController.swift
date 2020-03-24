@@ -35,16 +35,16 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
      
         var index = 0
         for event in calendarItems{
-            let startDate = Formatter.dateFormatter(dateString: event.date.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toDate)")
-            let endDate = Formatter.dateFormatter(dateString: event.date.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toDate)")
-            let startTime = Formatter.dateFormatter(dateString: event.date.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
-            let endTime = Formatter.dateFormatter(dateString: event.date.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
+            let startDate = Formatter.dateFormatter(dateString: event.startDate.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toDate)")
+            let endDate = Formatter.dateFormatter(dateString: event.startDate.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toDate)")
+            let startTime = Formatter.dateFormatter(dateString: event.startDate.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
+            let endTime = Formatter.dateFormatter(dateString: event.startDate.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
             
-            if index == 0 || startDate != Formatter.dateFormatter(dateString: calendarItems[index-1].date.description, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toDate)"){
+            if index == 0 || startDate != Formatter.dateFormatter(dateString: calendarItems[index-1].startDate.description, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toDate)"){
                 let dateFormatter = DateFormatter()
                 dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                 dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-                let itemDate = dateFormatter.date(from: event.date.description)!
+                let itemDate = dateFormatter.date(from: event.startDate.description)!
                 if itemDate >= Date(){
                         let newEvent = EventRow(title: "\(startDate)")
                         eventAndDateList.append(newEvent)
@@ -71,7 +71,7 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         let managedContext = appDelegate.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<CalendarItemData>(entityName: "CalendarItemData")
-        let sectionSortDescriptor = NSSortDescriptor(key: "date", ascending: true)
+        let sectionSortDescriptor = NSSortDescriptor(key: "startDate", ascending: true)
         let sortDescriptors = [sectionSortDescriptor]
         fetchRequest.sortDescriptors = sortDescriptors
         
@@ -118,8 +118,10 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
             let managedContext = appDelegate.persistentContainer.viewContext
             managedContext.delete(calendarItems[indexPath.row])
             
-            calendarItems.remove(at: indexPath.row) 
-            //tableView.deleteRows(at: [indexPath], with: .fade)
+            calendarItems.remove(at: indexPath.row)
+            // TODO:- queue reload data to run after tableview deletes row to make animation possible
+            //tableView.deleteRows(at: [indexPath], with: .fade)//
+            
             self.tableView.reloadData()
             
             do {
@@ -133,7 +135,7 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
     func configureText(for cell: UITableViewCell, with item: CalendarItemData) {
         let name = cell.viewWithTag(99) as! UILabel
         let date = cell.viewWithTag(100) as! UILabel
-        let time = Formatter.dateFormatter(dateString: (item.value(forKeyPath: "date") as? Date)!.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
+        let time = Formatter.dateFormatter(dateString: (item.value(forKeyPath: "startDate") as? Date)!.description, originalFormat: "\(timeTypes.ZFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
         
         name.text = item.value(forKeyPath: "name") as? String
         date.text = time
@@ -150,7 +152,7 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         let item = CalendarItemData(entity: entity, insertInto: managedContext)
         
         item.setValue(name, forKeyPath: "name")
-        item.setValue(date, forKey: "date")
+        item.setValue(date, forKey: "startDate")
         item.setValue(remind, forKey: "shouldRemind")
         item.setValue(id, forKey: "itemID")
         
@@ -172,7 +174,7 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
         if let item = calendarItems.first(where: { $0.itemID == id }) {
             print("The first negative number is \(id).")
             item.setValue(name, forKeyPath: "name")
-            item.setValue(date, forKey: "date")
+            item.setValue(date, forKey: "startDate")
             item.setValue(remind, forKey: "shouldRemind")
             item.setValue(id, forKey: "itemID")
         }
