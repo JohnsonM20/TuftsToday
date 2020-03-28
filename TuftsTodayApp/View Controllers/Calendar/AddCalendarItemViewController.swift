@@ -11,16 +11,16 @@ import CoreData
 
 protocol addCalendarItemViewControllerDelegate: class {
     func addCalendarItemViewControllerDidCancel(_ controller: AddCalendarItemViewController)
-    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishAdding name: String, date: Date, remind: Bool, id: String)
-    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing name: String, date: Date, remind: Bool, id: String)
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishAdding name: String, date: Date, endDate: Date, remind: Bool, id: String)
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing name: String, date: Date, endDate: Date, remind: Bool, id: String)
 }
 
 class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate {
 
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
-    // - NEW
     @IBOutlet weak var shouldRemindSwitch: UISwitch!
+    
     @IBOutlet weak var dueDateLabel: UILabel!
     @IBOutlet weak var endDateLabel: UILabel!
     
@@ -46,9 +46,11 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
             title = "Edit Item"
             textField.text = item.name
             datePicker.date = item.startDate
+            endDatePicker.date = item.endDate
             
             shouldRemindSwitch.isOn = item.shouldRemind
             dueDate = item.startDate
+            endDate = item.endDate
             doneBarButton.isEnabled = true
         }
         updateDateLabel(isStartDate: true)
@@ -135,19 +137,18 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
     
     @IBAction func done() {
         let name = textField.text!
-        let date = dueDate
         let remind = shouldRemindSwitch.isOn
- 
         if itemToEdit != nil {
-            delegate?.addCalendarItemViewController(self, didFinishEditing: name, date: date, remind: remind, id: itemToEdit!.itemID)
+            delegate?.addCalendarItemViewController(self, didFinishEditing: name, date: dueDate, endDate: endDate, remind: remind, id: itemToEdit!.itemID)
         } else {
-            delegate?.addCalendarItemViewController(self, didFinishAdding: name, date: date, remind: remind, id: UUID().uuidString)
+            delegate?.addCalendarItemViewController(self, didFinishAdding: name, date: dueDate, endDate: endDate, remind: remind, id: UUID().uuidString)
         }
     }
     
     @IBAction func startDateChanged(_ datePicker: UIDatePicker) {
         dueDate = datePicker.date
         updateDateLabel(isStartDate: true)
+        endDatePicker.minimumDate = dueDate
         if dueDate > endDate {
             endDate = dueDate
             endDatePicker.date = endDate
