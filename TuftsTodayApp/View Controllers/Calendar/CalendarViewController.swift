@@ -125,6 +125,7 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
             print("Could not save. \(error), \(error.userInfo)")
         }
         reloadCalendar()
+        item.scheduleNotification()
     }
     
     func editItem(name: String, date: Date, endDate: Date, remind: Bool, id: String){
@@ -140,6 +141,8 @@ class CalendarViewController: UITableViewController, addCalendarItemViewControll
             item.setValue(endDate, forKey: "endDate")
             item.setValue(remind, forKey: "shouldRemind")
             item.setValue(id, forKey: "itemID")
+            
+            item.scheduleNotification()
         }
         
       do {

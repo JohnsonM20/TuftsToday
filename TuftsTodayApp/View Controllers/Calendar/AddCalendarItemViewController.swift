@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 
 protocol addCalendarItemViewControllerDelegate: class {
     func addCalendarItemViewControllerDidCancel(_ controller: AddCalendarItemViewController)
@@ -136,6 +137,15 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
     }
     
     @IBAction func done() {
+        textField.resignFirstResponder()
+        if shouldRemindSwitch.isOn {
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.alert, .sound]) {
+                granted, error in
+            }
+            print("123456789")
+        }
+        
         let name = textField.text!
         let remind = shouldRemindSwitch.isOn
         if itemToEdit != nil {

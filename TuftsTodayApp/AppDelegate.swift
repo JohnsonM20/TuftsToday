@@ -112,15 +112,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
 }
 //http://dyang108.github.io/projects/2016/03/21/tufts-dining-api
-//https://resizeappicon.com/
+//https://appicon.co
 /*
 //TODO:
  Search for events in list
  Add checked events to calendar
- Save calendar events across runs
  Display meals
  Events tab for student hosted events
  Reddit like functionality for discussions
+ ClassChat - Allows for chat for students in your class
  Find Friends section - 'looking for someone for gym partner, driving carpool'
  Washing Availability
  
@@ -135,4 +135,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
  The numbered blocks are generally labs or recitations, while the lettered blocks are your base classes
  
  */
-//460
