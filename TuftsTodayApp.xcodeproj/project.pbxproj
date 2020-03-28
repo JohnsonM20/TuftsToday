@@ -29,6 +29,7 @@
 		34BDFC7F23F39305003F3D23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34BDFC7E23F39305003F3D23 /* Assets.xcassets */; };
 		34BDFC8223F39305003F3D23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34BDFC8023F39305003F3D23 /* LaunchScreen.storyboard */; };
 		34BDFC8A23F394D5003F3D23 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BDFC8923F394D5003F3D23 /* EventViewController.swift */; };
+		34C5F44D243002DE00D05017 /* text.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34C5F44C243002DE00D05017 /* text.txt */; };
 		34C8C70C23FF421D00E44E2D /* CustomFieldResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C8C70B23FF421D00E44E2D /* CustomFieldResponse.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 		34BDFC8123F39305003F3D23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		34BDFC8323F39305003F3D23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34BDFC8923F394D5003F3D23 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
+		34C5F44C243002DE00D05017 /* text.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = text.txt; sourceTree = "<group>"; };
 		34C8C70B23FF421D00E44E2D /* CustomFieldResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFieldResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -75,9 +77,9 @@
 		342A44C423F98E9E00545EFA /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				34C8C73024080C9F00E44E2D /* Events */,
 				346E7C4C240A866100C6DC2F /* Other */,
 				34C8C73124080CBA00E44E2D /* Calendar */,
-				34C8C73024080C9F00E44E2D /* Events */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -124,19 +126,28 @@
 		34BDFC7223F39304003F3D23 /* TuftsTodayApp */ = {
 			isa = PBXGroup;
 			children = (
-				342A44C523F98EE600545EFA /* Data Models */,
+				34C5F44E2430037900D05017 /* Resources */,
 				342A44C423F98E9E00545EFA /* View Controllers */,
+				342A44C523F98EE600545EFA /* Data Models */,
 				343D85C623F4402800639569 /* SwiftSoup-master */,
 				34BDFC7323F39304003F3D23 /* AppDelegate.swift */,
 				34BDFC7523F39304003F3D23 /* SceneDelegate.swift */,
 				344DD89F241A6FDF00128DE1 /* Formatter.swift */,
 				34732E5423F88ED000883F9B /* Main.storyboard */,
 				342A44C123F98C4700545EFA /* TuftsToday.xcdatamodeld */,
-				34BDFC7E23F39305003F3D23 /* Assets.xcassets */,
 				34BDFC8023F39305003F3D23 /* LaunchScreen.storyboard */,
-				34BDFC8323F39305003F3D23 /* Info.plist */,
 			);
 			path = TuftsTodayApp;
+			sourceTree = "<group>";
+		};
+		34C5F44E2430037900D05017 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				34BDFC7E23F39305003F3D23 /* Assets.xcassets */,
+				34BDFC8323F39305003F3D23 /* Info.plist */,
+				34C5F44C243002DE00D05017 /* text.txt */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		34C8C73024080C9F00E44E2D /* Events */ = {
@@ -224,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34732E5523F88ED000883F9B /* Main.storyboard in Resources */,
+				34C5F44D243002DE00D05017 /* text.txt in Resources */,
 				34BDFC8223F39305003F3D23 /* LaunchScreen.storyboard in Resources */,
 				34BDFC7F23F39305003F3D23 /* Assets.xcassets in Resources */,
 			);

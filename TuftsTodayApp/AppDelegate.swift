@@ -115,8 +115,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 //https://appicon.co
 /*
 //TODO:
+ Event descriptions for calendar
+ Star events to add to calendar
  Search for events in list
- Add checked events to calendar
+ 
  Display meals
  Events tab for student hosted events
  Reddit like functionality for discussions
@@ -124,9 +126,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
  Find Friends section - 'looking for someone for gym partner, driving carpool'
  Washing Availability
  
- */
-
-/*
  
  It can be a bit confusing to look at, but that's a single week. It's organized in two (or more) columns per day because you can have different blocks going at the same time.
 
