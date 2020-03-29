@@ -29,7 +29,7 @@
 		34BDFC7F23F39305003F3D23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34BDFC7E23F39305003F3D23 /* Assets.xcassets */; };
 		34BDFC8223F39305003F3D23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34BDFC8023F39305003F3D23 /* LaunchScreen.storyboard */; };
 		34BDFC8A23F394D5003F3D23 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BDFC8923F394D5003F3D23 /* EventViewController.swift */; };
-		34C5F44D243002DE00D05017 /* text.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34C5F44C243002DE00D05017 /* text.txt */; };
+		34C5F44D243002DE00D05017 /* blockSchedule.json in Resources */ = {isa = PBXBuildFile; fileRef = 34C5F44C243002DE00D05017 /* blockSchedule.json */; };
 		34C8C70C23FF421D00E44E2D /* CustomFieldResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C8C70B23FF421D00E44E2D /* CustomFieldResponse.swift */; };
 /* End PBXBuildFile section */
 
@@ -45,7 +45,6 @@
 		342A44CC23F9AA3E00545EFA /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		343B0D0523F7599E009BA08A /* PopoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
 		343B0D0723F775A3009BA08A /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
-		343D85C623F4402800639569 /* SwiftSoup-master */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "SwiftSoup-master"; path = "../../../../SwiftSoup-master"; sourceTree = "<group>"; };
 		344DD89F241A6FDF00128DE1 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		34732E5423F88ED000883F9B /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3479117923F9E6A3009FE23E /* AddCalendarItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCalendarItemViewController.swift; sourceTree = "<group>"; };
@@ -58,7 +57,8 @@
 		34BDFC8123F39305003F3D23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		34BDFC8323F39305003F3D23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34BDFC8923F394D5003F3D23 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
-		34C5F44C243002DE00D05017 /* text.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = text.txt; sourceTree = "<group>"; };
+		34C5F44C243002DE00D05017 /* blockSchedule.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockSchedule.json; sourceTree = "<group>"; };
+		34C5F45024310D0D00D05017 /* SwiftSoup-master */ = {isa = PBXFileReference; lastKnownFileType = text; name = "SwiftSoup-master"; path = "../../../../../SwiftSoup-master"; sourceTree = "<group>"; };
 		34C8C70B23FF421D00E44E2D /* CustomFieldResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFieldResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -77,9 +77,9 @@
 		342A44C423F98E9E00545EFA /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				34C8C73124080CBA00E44E2D /* Calendar */,
 				34C8C73024080C9F00E44E2D /* Events */,
 				346E7C4C240A866100C6DC2F /* Other */,
-				34C8C73124080CBA00E44E2D /* Calendar */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -129,7 +129,6 @@
 				34C5F44E2430037900D05017 /* Resources */,
 				342A44C423F98E9E00545EFA /* View Controllers */,
 				342A44C523F98EE600545EFA /* Data Models */,
-				343D85C623F4402800639569 /* SwiftSoup-master */,
 				34BDFC7323F39304003F3D23 /* AppDelegate.swift */,
 				34BDFC7523F39304003F3D23 /* SceneDelegate.swift */,
 				344DD89F241A6FDF00128DE1 /* Formatter.swift */,
@@ -143,9 +142,10 @@
 		34C5F44E2430037900D05017 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				34C5F45024310D0D00D05017 /* SwiftSoup-master */,
 				34BDFC7E23F39305003F3D23 /* Assets.xcassets */,
 				34BDFC8323F39305003F3D23 /* Info.plist */,
-				34C5F44C243002DE00D05017 /* text.txt */,
+				34C5F44C243002DE00D05017 /* blockSchedule.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -235,7 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34732E5523F88ED000883F9B /* Main.storyboard in Resources */,
-				34C5F44D243002DE00D05017 /* text.txt in Resources */,
+				34C5F44D243002DE00D05017 /* blockSchedule.json in Resources */,
 				34BDFC8223F39305003F3D23 /* LaunchScreen.storyboard in Resources */,
 				34BDFC7F23F39305003F3D23 /* Assets.xcassets in Resources */,
 			);

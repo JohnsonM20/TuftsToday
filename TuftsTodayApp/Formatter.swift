@@ -11,12 +11,12 @@ import Foundation
 
 class Formatter{
     
-    class func dateFormatter(dateString: String, originalFormat: String, convertTo: String) -> String{
+    class func dateFormatterToString(dateString: String, originalFormat: String, convertTo: String) -> String{
         //https://nsdateformatter.com/
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
 
-        if originalFormat == "\(timeTypes.ZFormat)"{
+        if originalFormat == "\(timeTypes.ymdZFormat)"{
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         } else {
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
@@ -30,8 +30,26 @@ class Formatter{
         } else if convertTo == "\(timeTypes.toDate)"{
             dateFormatterPrint.dateFormat = "EEEE, MMM d"
             return dateFormatterPrint.string(from: date)
+        } else if convertTo == "\(timeTypes.toDateWithYear)"{
+            dateFormatterPrint.dateFormat = "EEEE, MMM d, yyyy"
+            return dateFormatterPrint.string(from: date)
         }
         return ""
+    }
+    
+    class func dateFormatterToDate(dateString: String, originalFormat: String) -> Date{
+        //https://nsdateformatter.com/
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        if originalFormat == "\(timeTypes.emdFormat)"{
+            dateFormatter.dateFormat = "EEEE, MMM d, yyyy, h:mm a"
+        }
+        
+        if let date = dateFormatter.date(from: dateString) {
+            return date
+        }
+        return Date()
     }
     
 }
@@ -39,8 +57,10 @@ class Formatter{
 enum timeTypes {
     case toTimeOfDay
     case toDate
-    case TFormat
-    case ZFormat
+    case toDateWithYear
+    case ymdTFormat //"yyyy-MM-dd'T'HH:mm:ss"
+    case ymdZFormat //"yyyy-MM-dd HH:mm:ss Z"
+    case emdFormat //"EEEE, MMM d, yyyy"
 }
 
 //Convert html code to a regular string:

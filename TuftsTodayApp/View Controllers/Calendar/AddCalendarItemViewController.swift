@@ -10,15 +10,16 @@ import UIKit
 import CoreData
 import UserNotifications
 
-protocol addCalendarItemViewControllerDelegate: class {
+protocol AddCalendarItemViewControllerDelegate: class {
     func addCalendarItemViewControllerDidCancel(_ controller: AddCalendarItemViewController)
-    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishAdding name: String, date: Date, endDate: Date, remind: Bool, id: String)
-    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing name: String, date: Date, endDate: Date, remind: Bool, id: String)
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishAdding name: String, desc: String, date: Date, endDate: Date, remind: Bool, id: String)
+    func addCalendarItemViewController(_ controller: AddCalendarItemViewController, didFinishEditing name: String, desc: String, date: Date, endDate: Date, remind: Bool, id: String)
 }
 
-class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate {
+class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate, UITextViewDelegate {
 
-    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var nameField: UITextField!
+    @IBOutlet weak var descriptionField: UITextView!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     @IBOutlet weak var shouldRemindSwitch: UISwitch!
     
@@ -35,7 +36,7 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
     var endDate = Date()
     var endDatePickerVisible = false
     
-    weak var delegate: addCalendarItemViewControllerDelegate?
+    weak var delegate: AddCalendarItemViewControllerDelegate?
     var itemToEdit: CalendarItemData?
     
     override func viewDidLoad() {
@@ -43,9 +44,17 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
         navigationItem.largeTitleDisplayMode = .never
         
         datePicker.minimumDate = Date()
+        
+        descriptionField.delegate = self
+        
+        descriptionField.becomeFirstResponder()
+        descriptionField.selectedTextRange = descriptionField.textRange(from: descriptionField.beginningOfDocument, to: descriptionField.beginningOfDocument)
+
+        
         if let item = itemToEdit {
             title = "Edit Item"
-            textField.text = item.name
+            nameField.text = item.name
+            descriptionField.text = item.eventDescription
             datePicker.date = item.startDate
             endDatePicker.date = item.endDate
             
@@ -53,6 +62,9 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
             dueDate = item.startDate
             endDate = item.endDate
             doneBarButton.isEnabled = true
+        } else {
+            descriptionField.text = "Event Description"
+            descriptionField.textColor = UIColor.lightGray
         }
         updateDateLabel(isStartDate: true)
         updateDateLabel(isStartDate: false)
@@ -68,7 +80,7 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
     }
     
     override func viewWillAppear(_ animated: Bool) { super.viewWillAppear(animated)
-        textField.becomeFirstResponder()
+        nameField.becomeFirstResponder()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -99,7 +111,7 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        textField.resignFirstResponder()
+        nameField.resignFirstResponder()
         if indexPath.section == 1 && indexPath.row == 1{
             if endDatePickerVisible {
                 hideDatePicker(isStartDate: false)
@@ -137,21 +149,22 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
     }
     
     @IBAction func done() {
-        textField.resignFirstResponder()
+        nameField.resignFirstResponder()
         if shouldRemindSwitch.isOn {
             let center = UNUserNotificationCenter.current()
             center.requestAuthorization(options: [.alert, .sound]) {
                 granted, error in
             }
-            print("123456789")
         }
         
-        let name = textField.text!
+        let name = nameField.text!
         let remind = shouldRemindSwitch.isOn
+        let desc = descriptionField.text
+        
         if itemToEdit != nil {
-            delegate?.addCalendarItemViewController(self, didFinishEditing: name, date: dueDate, endDate: endDate, remind: remind, id: itemToEdit!.itemID)
+            delegate?.addCalendarItemViewController(self, didFinishEditing: name, desc: desc ?? "", date: dueDate, endDate: endDate, remind: remind, id: itemToEdit!.itemID)
         } else {
-            delegate?.addCalendarItemViewController(self, didFinishAdding: name, date: dueDate, endDate: endDate, remind: remind, id: UUID().uuidString)
+            delegate?.addCalendarItemViewController(self, didFinishAdding: name, desc: desc ?? "", date: dueDate, endDate: endDate, remind: remind, id: UUID().uuidString)
         }
     }
     
@@ -226,6 +239,51 @@ class AddCalendarItemViewController: UITableViewController, UITextFieldDelegate 
             doneBarButton.isEnabled = true
         }
         return true
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+
+        // Combine the textView text and the replacement text to
+        // create the updated text string
+        let currentText:String = textView.text
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+
+        // If updated text view will be empty, add the placeholder
+        // and set the cursor to the beginning of the text view
+        if updatedText.isEmpty {
+
+            textView.text = "Event Description"
+            textView.textColor = UIColor.lightGray
+
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+        }
+
+        // Else if the text view's placeholder is showing and the
+        // length of the replacement string is greater than 0, set
+        // the text color to black then set its text to the
+        // replacement string
+         else if textView.textColor == UIColor.lightGray && !text.isEmpty {
+            textView.textColor = UIColor.black
+            textView.text = text
+        }
+
+        // For every other case, the text should change with the usual
+        // behavior...
+        else {
+            return true
+        }
+
+        // ...otherwise return false since the updates have already
+        // been made
+        return false
+    }
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        if self.view.window != nil {
+            if textView.textColor == UIColor.lightGray {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
+        }
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {

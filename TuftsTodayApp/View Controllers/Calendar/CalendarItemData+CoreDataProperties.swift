@@ -22,5 +22,6 @@ extension CalendarItemData {
     @NSManaged public var itemID: String
     @NSManaged public var name: String
     @NSManaged public var shouldRemind: Bool
+    @NSManaged public var eventDescription: String
 
 }

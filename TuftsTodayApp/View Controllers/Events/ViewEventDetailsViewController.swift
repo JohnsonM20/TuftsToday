@@ -8,22 +8,34 @@
 
 import UIKit
 import SwiftSoup
+import CoreData
 
 protocol ViewEventDetailsViewControllerDelegate: class {
     func viewEventDetailsViewController(controller: ViewEventDetailsViewController)
 }
 
+protocol AddEventToCalendarVCDelegate: class {
+    func addEventVC(_ controller: ViewEventDetailsViewController, didAdd name: String, desc: String, date: Date, endDate: Date, remind: Bool, id: String)
+    func deleteEventVC(_ controller: ViewEventDetailsViewController, didDelete id: String)
+}
+
 class ViewEventDetailsViewController: UITableViewController {
 
     @IBOutlet weak var eventDetails: UITextView!
-    weak var delegate: ViewEventDetailsViewControllerDelegate?
+    @IBOutlet weak var calendarSwitch: UISwitch!
+    weak var viewEventsDelegate: ViewEventDetailsViewControllerDelegate?
+    weak var addToCalendarDelegate: AddEventToCalendarVCDelegate?
     var itemViewed: Event?
     var attributedString = NSMutableAttributedString(string:"", attributes:nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         navigationItem.largeTitleDisplayMode = .never
+        if isItemInCalendar(){
+            calendarSwitch.setOn(true, animated: false)
+        } else {
+            calendarSwitch.setOn(false, animated: false)
+        }
         
         if let itemViewed = itemViewed  {
             title = "Event Details"
@@ -54,6 +66,29 @@ class ViewEventDetailsViewController: UITableViewController {
         } else {
             print("fail2")
         }
+        
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 300
+    }
+    
+    @IBAction func addToCalendar(_ addToCalendar: UISwitch) {
+        addToCalendarDelegate = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Calendar") as! CalendarViewController
+        
+        if addToCalendar.isOn{
+            let startDate = Formatter.dateFormatterToDate(dateString: "\(itemViewed!.startDay), \(itemViewed!.startTime)", originalFormat: "\(timeTypes.emdFormat)")
+            let endDate = Formatter.dateFormatterToDate(dateString: "\(itemViewed!.endDay), \(itemViewed!.endTime)", originalFormat: "\(timeTypes.emdFormat)")
+            
+            let eventDescription = "\(itemViewed!.description.html2String) \n\n\(itemViewed!.location.html2String)"
+            
+            addToCalendarDelegate?.addEventVC(self, didAdd: itemViewed!.title, desc: eventDescription, date: startDate, endDate: endDate, remind: true, id: itemViewed!.eventID.description)
+            
+            if addToCalendarDelegate != nil{
+            } else {
+                print("error")
+            }
+        } else {
+            addToCalendarDelegate?.deleteEventVC(self, didDelete: itemViewed!.eventID.description)
+        }
     }
     
     func addEventDetail(title: String, description: String){
@@ -74,5 +109,24 @@ class ViewEventDetailsViewController: UITableViewController {
         }
 
     }
-
+    
+    func isItemInCalendar() -> Bool{
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return false}
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<CalendarItemData>(entityName: "CalendarItemData")
+        do {
+            let results = try managedContext.fetch(fetchRequest)
+            for result in results{
+                if let resultID = result.value(forKey: "itemID") as? String{
+                    if itemViewed?.eventID.description == resultID{
+                        return true
+                    }
+                }
+            }
+        } catch let error as NSError {
+          print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        return false
+    }
 }

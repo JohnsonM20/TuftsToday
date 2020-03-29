@@ -1,0 +1,47 @@
+
+{
+    "block":{
+        "name": "A",
+        "day"{
+            "name":"monday",
+            "startTimePlus":"8:05",
+            "startTime":"8:30",
+            "endTime":"9:20"
+        }
+        "day"{
+            "name":"wednesday",
+            "startTimePlus":"8:05",
+            "startTime":"8:30",
+            "endTime":"9:20"
+        }
+        "day"{
+            "name":"thursday",
+            "startTime":"9:30",
+            "endTime":"10:20"
+        }
+    }
+    
+    "block":{
+        "name": "B",
+        "day"{
+            "name":"monday",
+            "startTimePlus":"8:05",
+            "startTime":"8:30",
+            "endTime":"9:20"
+        }
+        "day"{
+            "name":"thursday",
+            "startTimePlus":"8:05",
+            "startTime":"8:30",
+            "endTime":"9:20"
+        }
+        "day"{
+            "name":"friday",
+            "startTime":"9:30",
+            "endTime":"10:20"
+        }
+    }
+}
+
+
+

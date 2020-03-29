@@ -23,7 +23,6 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     var eventList: [EventItemResponse] = []
     var eventAndDateList: [EventRow] = []
-    var checkedItems: Set<Int> = []
     
     var unofficialEventList: [EventRow] = []
     var isOfficialEvents = true
@@ -43,25 +42,22 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
         var index = 0
         for event in eventList{
             //print("Today's Starting Date: \(event.startDateTime)")
-            let startDate = Formatter.dateFormatter(dateString: event.startDateTime, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toDate)")
-            let endDate = Formatter.dateFormatter(dateString: event.endDateTime, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toDate)")
-            let startTime = Formatter.dateFormatter(dateString: event.startDateTime, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
-            let endTime = Formatter.dateFormatter(dateString: event.endDateTime, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
+            let startDate = Formatter.dateFormatterToString(dateString: event.startDateTime, originalFormat: "\(timeTypes.ymdTFormat)", convertTo: "\(timeTypes.toDate)")
+            let endDate = Formatter.dateFormatterToString(dateString: event.endDateTime, originalFormat: "\(timeTypes.ymdTFormat)", convertTo: "\(timeTypes.toDate)")
+            let startTime = Formatter.dateFormatterToString(dateString: event.startDateTime, originalFormat: "\(timeTypes.ymdTFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
+            let endTime = Formatter.dateFormatterToString(dateString: event.endDateTime, originalFormat: "\(timeTypes.ymdTFormat)", convertTo: "\(timeTypes.toTimeOfDay)")
             
-            if index == 0 || startDate != Formatter.dateFormatter(dateString: eventList[index-1].startDateTime, originalFormat: "\(timeTypes.TFormat)", convertTo: "\(timeTypes.toDate)"){
+            let startDateWithYear = Formatter.dateFormatterToString(dateString: event.startDateTime, originalFormat: "\(timeTypes.ymdTFormat)", convertTo: "\(timeTypes.toDateWithYear)")
+            let endDateWithYear = Formatter.dateFormatterToString(dateString: event.endDateTime, originalFormat: "\(timeTypes.ymdTFormat)", convertTo: "\(timeTypes.toDateWithYear)")
+            
+            if index == 0 || startDate != Formatter.dateFormatterToString(dateString: eventList[index-1].startDateTime, originalFormat: "\(timeTypes.ymdTFormat)", convertTo: "\(timeTypes.toDate)"){
                 let dateFormatter = DateFormatter()
                 dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                 dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
                 let itemDate = dateFormatter.date(from: event.startDateTime)!
                 if itemDate >= todaysDate{
-                    //if startDate != endDate{
-                    //    let newEvent = EventRow(title: "\(startDate) - \(endDate)")
-                    //    eventAndDateList.append(newEvent)
-                    //} else {
-                        let newEvent = EventRow(title: "\(startDate)")
-                        eventAndDateList.append(newEvent)
-                    //}
-                    
+                    let newEvent = EventRow(title: "\(startDate)")
+                    eventAndDateList.append(newEvent)
                 } else {
                     if startDate != endDate{
                         let newEvent = EventRow(title: "\(startDate) - \(endDate)")
@@ -73,7 +69,7 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
                 }
             }
             
-            let newEvent = Event(title: event.title, description: event.desc, location: event.location, startDay: startDate, startTime: startTime, endTime: endTime, eventID: event.eventID, webLink: event.webLink)
+            let newEvent = Event(title: event.title, description: event.desc, location: event.location, startDay: startDateWithYear, endDay: endDateWithYear, startTime: startTime, endTime: endTime, eventID: event.eventID, webLink: event.webLink)
             eventAndDateList.append(newEvent)
             
             index += 1
@@ -134,7 +130,7 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
                 //print("item cell")
                 let name = cell.viewWithTag(1) as! UILabel
                 let info = cell.viewWithTag(2) as! UILabel
-                let check = cell.viewWithTag(1001) as! UILabel
+                //let check = cell.viewWithTag(1001) as! UILabel
                 let startingTime = event.startTime
                 let endingTime = event.endTime
                 
@@ -147,11 +143,6 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
                     info.text = info.text! + " | " + event.location.html2String
                 }
                 
-                if checkedItems.contains(event.eventID){
-                    check.text = "√"
-                } else {
-                    check.text = ""
-                }
             }
         } else if isOfficialEvents == true{
             //print("new day cell")
@@ -175,24 +166,11 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
     // MARK:- Table View Delegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath){
-            
-            if let event = eventAndDateList[indexPath.row] as? Event  {
-                configureCheckmark(for: cell, with: event)
+            if eventAndDateList[indexPath.row] is Event{
+                performSegue(withIdentifier: "ViewItem", sender: cell)
             }
-
         }
         tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    func configureCheckmark(for cell: UITableViewCell, with item: Event) {
-        let label = cell.viewWithTag(1001) as! UILabel
-        if checkedItems.contains(item.eventID){
-            label.text = ""
-            checkedItems.remove(item.eventID)
-        } else {
-            label.text = "√"
-            checkedItems.insert(item.eventID)
-        }
     }
     
     @IBAction func scrollToTop(_ sender: Any) {
@@ -215,7 +193,7 @@ class EventViewController: UIViewController, UITableViewDataSource, UITableViewD
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ViewItem" {
             let controller = segue.destination as! ViewEventDetailsViewController
-            controller.delegate = self// as? ViewEventDetailsViewControllerDelegate
+            controller.viewEventsDelegate = self
             if let indexPath = table.indexPath(for: sender as! UITableViewCell) {
                 controller.itemViewed = eventAndDateList[indexPath.row] as? Event
             }
